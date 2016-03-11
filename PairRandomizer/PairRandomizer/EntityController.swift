@@ -33,6 +33,7 @@ class EntityController {
     }
 
     var listOfNames: [String] = []
+    var shuffledList: [String] = []
     
     func randomizeOrder() {
         
