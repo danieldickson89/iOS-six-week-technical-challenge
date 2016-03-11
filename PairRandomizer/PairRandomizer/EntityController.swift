@@ -25,7 +25,7 @@ class EntityController {
         do {
             let array = try moc.executeFetchRequest(request) as! [Entity]
             
-            return array
+            return array.sort() { $0.name < $1.name }
         
         } catch {
             return []
@@ -42,8 +42,10 @@ class EntityController {
         
         var count = 0
         for entity in listOfNames {
+            print("\(entity) is being removed")
             self.listOfNames.removeAtIndex(count)
             self.listOfNames.insert(entity, atIndex: Int(arc4random_uniform(UInt32(listOfNames.count))))
+            print("\(entity) is being inserted")
             count++
         }
     }
