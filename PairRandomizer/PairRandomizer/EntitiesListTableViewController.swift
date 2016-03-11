@@ -18,6 +18,8 @@ class EntitiesListTableViewController: UITableViewController {
         super.viewDidLoad()
         
         randomizeButton.layer.cornerRadius = 4
+        
+        EntityController.sharedController.randomizeOrder()
 
     }
 
@@ -36,9 +38,9 @@ class EntitiesListTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("entityCell", forIndexPath: indexPath)
 
-        let entity = EntityController.sharedController.entitiesList[indexPath.row]
+        let entity = EntityController.sharedController.listOfNames[indexPath.row]
         
-        cell.textLabel?.text = entity.name
+        cell.textLabel?.text = entity
         
         let rowNumber = indexPath.row
         
@@ -88,8 +90,9 @@ class EntitiesListTableViewController: UITableViewController {
     
     @IBAction func randomizeButtonClicked(sender: AnyObject) {
         
-        //EntityController.sharedController.randomizeOrder()
+        EntityController.sharedController.randomizeOrder()
         self.tableView.reloadData()
+        
     }
     
     var tField: UITextField!

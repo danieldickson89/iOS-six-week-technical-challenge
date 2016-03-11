@@ -17,31 +17,36 @@ class EntityController {
     // Create arrays for each category (and one for all combined)
     
     var entitiesList: [Entity] {
+        
+        
         let request = NSFetchRequest(entityName: "Entity")
         let moc = Stack.sharedStack.managedObjectContext
         
         do {
             let array = try moc.executeFetchRequest(request) as! [Entity]
             
-            return array.shuffle()
-            //return array.sort() { $0.name < $1.name }
+            return array
         
         } catch {
             return []
         }
     }
+
+    var listOfNames: [String] = []
     
-//    var listOfNames: [String] {
-//        var array: [String] = []
-//        for entity in entitiesList {
-//            array.append(entity.name!)
-//        }
-//        return array.shuffle()
-//    }
-    
-//    func randomizeOrder() {
-//        self.listOfNames.shuffle()
-//    }
+    func randomizeOrder() {
+        
+        for entity in entitiesList {
+            listOfNames.append(entity.name!)
+        }
+        
+        var count = 0
+        for entity in listOfNames {
+            self.listOfNames.removeAtIndex(count)
+            self.listOfNames.insert(entity, atIndex: Int(arc4random_uniform(UInt32(listOfNames.count))))
+            count++
+        }
+    }
     
     func addEntity(entity: Entity) {
         
@@ -62,29 +67,6 @@ class EntityController {
             try moc.save()
         } catch {
             print("Error saving \(error)")
-        }
-    }
-}
-
-extension CollectionType {
-    /// Return a copy of `self` with its elements shuffled
-    func shuffle() -> [Generator.Element] {
-        var list = Array(self)
-        list.shuffleInPlace()
-        return list
-    }
-}
-
-extension MutableCollectionType where Index == Int {
-    /// Shuffle the elements of `self` in-place.
-    mutating func shuffleInPlace() {
-        // empty and single-element collections don't shuffle
-        if count < 2 { return }
-        
-        for i in 0..<count - 1 {
-            let j = Int(arc4random_uniform(UInt32(count - i))) + i
-            guard i != j else { continue }
-            swap(&self[i], &self[j])
         }
     }
 }
