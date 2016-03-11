@@ -25,30 +25,27 @@ class EntityController {
         do {
             let array = try moc.executeFetchRequest(request) as! [Entity]
             
+            //return array
             return array.sort() { $0.name < $1.name }
         
         } catch {
             return []
         }
     }
-
-    var listOfNames: [String] = []
-    var shuffledList: [String] = []
     
-    func randomizeOrder() {
-        
-        for entity in entitiesList {
-            listOfNames.append(entity.name!)
+    var randomEntities: [Entity] = []
+    
+    func randomizeList(list: [Entity]) {
+        randomEntities = shuffleArray(entitiesList)
+    }
+    
+    func shuffleArray<T>(var array: [T]) -> [T] {
+        for index in (0..<array.count) {
+            let randomIndex = Int(arc4random_uniform(UInt32(index)))
+            (array[index], array[randomIndex]) = (array[randomIndex], array[index])
         }
         
-        var count = 0
-        for entity in listOfNames {
-            print("\(entity) is being removed")
-            self.listOfNames.removeAtIndex(count)
-            self.listOfNames.insert(entity, atIndex: Int(arc4random_uniform(UInt32(listOfNames.count))))
-            print("\(entity) is being inserted")
-            count++
-        }
+        return array
     }
     
     func addEntity(entity: Entity) {

@@ -19,8 +19,7 @@ class EntitiesListTableViewController: UITableViewController {
         
         randomizeButton.layer.cornerRadius = 4
         
-        EntityController.sharedController.randomizeOrder()
-
+        EntityController.sharedController.randomizeList(EntityController.sharedController.randomEntities)
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,15 +31,15 @@ class EntitiesListTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return EntityController.sharedController.entitiesList.count
+        return EntityController.sharedController.randomEntities.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("entityCell", forIndexPath: indexPath)
 
-        let entity = EntityController.sharedController.listOfNames[indexPath.row]
+        let entity = EntityController.sharedController.randomEntities[indexPath.row]
         
-        cell.textLabel?.text = entity
+        cell.textLabel?.text = entity.name
         
         let rowNumber = indexPath.row
         
@@ -78,8 +77,9 @@ class EntitiesListTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
-            let entity = EntityController.sharedController.entitiesList[indexPath.row]
+            let entity = EntityController.sharedController.randomEntities[indexPath.row]
             EntityController.sharedController.removeEntity(entity)
+            EntityController.sharedController.randomizeList(EntityController.sharedController.randomEntities)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             tableView.reloadData()
         }
@@ -89,7 +89,8 @@ class EntitiesListTableViewController: UITableViewController {
     
     @IBAction func randomizeButtonClicked(sender: AnyObject) {
         
-        EntityController.sharedController.randomizeOrder()
+        EntityController.sharedController.randomizeList(EntityController.sharedController.randomEntities)
+
         self.tableView.reloadData()
         
     }
@@ -98,7 +99,7 @@ class EntitiesListTableViewController: UITableViewController {
     
     func configurationTextField(textField: UITextField!)
     {
-        textField.placeholder = "Enter name of group"
+        textField.placeholder = "Enter Entity Name"
         tField = textField
     }
 
@@ -114,6 +115,7 @@ class EntitiesListTableViewController: UITableViewController {
             if let name = self.tField.text {
                 let newEntity = Entity(name: name)
                 EntityController.sharedController.addEntity(newEntity)
+                EntityController.sharedController.randomizeList(EntityController.sharedController.randomEntities)
                 self.tableView.reloadData()
             }
             
@@ -122,15 +124,5 @@ class EntitiesListTableViewController: UITableViewController {
         })
         
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
